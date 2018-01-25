@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.11.2">
+  <cmmn:case id="Stock_Picker_Educator" name="Stock Picker Educator">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="Stock Picker Educator">
+      <cmmn:documentation id="Documentation_02qjgib">Aggregates and provides educational content that can be pulled into the core application</cmmn:documentation>
+      <cmmn:planItem id="PlanItem_1" definitionRef="Task_1" />
+      <cmmn:task id="Task_1" />
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmn:textAnnotation id="TextAnnotation_1ifuwak">  <cmmn:text>Aggregates and provides educational content that can be pulled into the core application</cmmn:text>
+</cmmn:textAnnotation>
+  <cmmn:association id="Association_0clp8hr" sourceRef="CasePlanModel_1" targetRef="TextAnnotation_1ifuwak" />
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="114" y="63" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="150" y="96" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="TextAnnotation_1ifuwak_di" cmmnElementRef="TextAnnotation_1ifuwak">
+        <dc:Bounds x="730" y="50" width="160" height="65" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="Association_0clp8hr_di" cmmnElementRef="Association_0clp8hr">
+        <di:waypoint xsi:type="dc:Point" x="648" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="689" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="689" y="83" />
+        <di:waypoint xsi:type="dc:Point" x="730" y="83" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>

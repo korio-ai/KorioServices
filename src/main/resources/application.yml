@@ -1,0 +1,13 @@
+camunda.bpm:
+  admin-user:
+    id: kermit
+    password: halsey2829
+    firstName: Kermit
+  filter:
+    create: All tasks
+camunda:
+  bpm:
+    auto-deployment-enabled: true
+    id-generator: simple
+    database:
+      type: h2

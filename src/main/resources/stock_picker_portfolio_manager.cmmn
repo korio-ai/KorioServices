@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.11.2">
+  <cmmn:case id="Stock_Picker_Portfolio_Manager" name="Stock Picker Portfolio Manager">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="Stock Picker Portfolio Manager">
+      <cmmn:documentation id="Documentation_1p3uz68">Holds and manages the actual stock portfolio of the user.</cmmn:documentation>
+      <cmmn:planItem id="PlanItem_1" definitionRef="Task_1" />
+      <cmmn:planItem id="PlanItem_0g8co5k" definitionRef="Milestone_11wez4v" />
+      <cmmn:planItem id="PlanItem_1o1lj8j" definitionRef="Milestone_09gttbl" />
+      <cmmn:task id="Task_1" />
+      <cmmn:milestone id="Milestone_11wez4v" name="share ownership consistend with optimized model" />
+      <cmmn:milestone id="Milestone_09gttbl" name="differences from optimized model highlighted" />
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmn:textAnnotation id="TextAnnotation_045pwv8">  <cmmn:text>Holds and manages the actual stock portfolio of the user.</cmmn:text>
+</cmmn:textAnnotation>
+  <cmmn:association id="Association_09abj64" sourceRef="CasePlanModel_1" targetRef="TextAnnotation_045pwv8" />
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="114" y="63" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="150" y="96" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="TextAnnotation_045pwv8_di" cmmnElementRef="TextAnnotation_045pwv8">
+        <dc:Bounds x="723" y="54" width="257" height="41" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="Association_09abj64_di" cmmnElementRef="Association_09abj64">
+        <di:waypoint xsi:type="dc:Point" x="648" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="686" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="686" y="74" />
+        <di:waypoint xsi:type="dc:Point" x="723" y="74" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="PlanItem_0g8co5k_di" cmmnElementRef="PlanItem_0g8co5k">
+        <dc:Bounds x="279.2341137123746" y="160.1304347826087" width="100" height="40" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1o1lj8j_di" cmmnElementRef="PlanItem_1o1lj8j">
+        <dc:Bounds x="267.2341137123746" y="302.1304347826087" width="100" height="40" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>
