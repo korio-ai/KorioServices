@@ -24,6 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<kotlin.version>1.2.0-rc-39</kotlin.version>
+		<version.postgresql>9.3-1102-jdbc4</version.postgresql>
 	</properties>
 
 	<dependencies>
@@ -40,6 +41,11 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${version.postgresql}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
