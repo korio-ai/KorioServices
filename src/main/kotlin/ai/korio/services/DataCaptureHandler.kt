@@ -32,6 +32,7 @@ class DataCaptureHandler {
         // val variableMap: VariableMap = CamundaEngine().formService!!.getTaskFormVariables(task.id) //gets variables and values as key-value pair
         val taskFormData = CamundaEngine().formService!!.getTaskFormData(task.id)
         val formFields: List<FormField> =  taskFormData.formFields
+
         // TODO:  "value" seems to = default value, consider using it for placeholder??
         formFields.forEach {
             val templateOptions = Models.TemplateOptions(
@@ -45,7 +46,7 @@ class DataCaptureHandler {
                     it.typeName,
                     templateOptions
             )
-            System.out.println(it.id + " is Id |   " + it.isBusinessKey + " is businessKey |  " + it.label + " is label |  " + it.type + " is type |  " + it.typeName + " is typename |  " + it.properties.toString() + " is properties to string |  ")
+            System.out.println( it.id + " is Id |   " + it.isBusinessKey + " is businessKey |  " + it.label + " is label |  " + it.type + " is type |  " + it.typeName + " is typename |  " + it.properties.toString() + " is properties to string |  ")
             dataCaptureFields.add(field)
         }
         return dataCaptureFields

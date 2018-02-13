@@ -83,6 +83,7 @@ import org.springframework.stereotype.Service
         val currentTasks: MutableList<Models.MyTask> = mutableListOf()
         val tasks = CamundaEngine().taskService!!.createTaskQuery()
                 .processInstanceId(processInstanceId)  // TODO: enable .taskAsignee(user)
+                .initializeFormKeys()  // necessary or form key will not populate and error will be thrown
                 //.taskAssignee(user)
                 //.active() // active is not a property of task directly, so it might be up the inheritance chain...
                 .list() // should only return the current task.
@@ -112,6 +113,7 @@ import org.springframework.stereotype.Service
                     //it.formKey,
                     it.tenantId,
                     taskCommands,
+                    it.formKey,
                     dataCaptureFields)
             currentTasks.add(currentTaskItem)
 

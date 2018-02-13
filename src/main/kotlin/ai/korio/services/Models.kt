@@ -39,9 +39,9 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
      * Per Angular Formly: https://github.com/formly-js/ngx-formly
      * */
     data class FieldDataCapture (
-        val key: String, // field name
-        val type: String, // data type
-        val templateOptions: TemplateOptions)
+            val key: String, // field name
+            val type: String, // data type
+            val templateOptions: TemplateOptions)
 
     data class TemplateOptions (
             val type: String?, // e.g. e-mail
@@ -177,6 +177,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
       //  val formKey:  String?, // FIXME: RUNTIME ERROR: The form key is not initialized. You must call initializeFormKeys() on the task query before you can retrieve the form key.	If not null, the form key for the task.
             val tenantId:  String?, //	If not null, the tenantId for the task.
             val enabledCommands: List<Command>,
+            val formKey: String?, // for custom layouts. if is not null AND if form markup exists, following fields will be ignored
             val dataCaptureFields: List<FieldDataCapture>? // only for user tasks
     )
 

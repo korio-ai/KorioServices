@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.11.2">
-  <cmmn:case id="NewHire" name="hiring process">
-    <cmmn:casePlanModel id="hiring_process_1" name="Hiring Process" autoComplete="false">
-      <cmmn:documentation id="Documentation_0p9fto9">Start this to work through a new hire.</cmmn:documentation>
+  <cmmn:case id="IndividualAutoQuote" name="Individual Auto Quote">
+    <cmmn:casePlanModel id="AutoQuote_1" name="Individual Auto Quote" autoComplete="false">
+      <cmmn:documentation id="Documentation_0p9fto9">Start this to work through an auto policy quote.</cmmn:documentation>
       <cmmn:planItem id="PlanItem_1" definitionRef="HumanTask_1fdgh06">
         <cmmn:documentation id="Documentation_170ehw5">This is general documentation</cmmn:documentation>
       </cmmn:planItem>
@@ -14,7 +14,7 @@
   <cmmndi:CMMNDI>
     <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
       <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
-      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="hiring_process_1">
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="AutoQuote_1">
         <dc:Bounds x="114" y="63" width="534" height="389" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>

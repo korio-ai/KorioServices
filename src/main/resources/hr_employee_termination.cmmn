@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.11.2">
+    <cmmn:case id="Termination" name="Employee Termination">
+        <cmmn:casePlanModel id="termination_process_1" name="Employee Termination" autoComplete="false">
+            <cmmn:documentation id="Documentation_0p9fto9">Start this to work through a termination.</cmmn:documentation>
+            <cmmn:planItem id="PlanItem_1" definitionRef="HumanTask_1fdgh06">
+                <cmmn:documentation id="Documentation_170ehw5">This is general documentation</cmmn:documentation>
+            </cmmn:planItem>
+            <cmmn:humanTask id="HumanTask_1fdgh06" name="Simple human task">
+                <cmmn:documentation id="Documentation_1enbbms">This is definition documentation</cmmn:documentation>
+            </cmmn:humanTask>
+        </cmmn:casePlanModel>
+    </cmmn:case>
+    <cmmndi:CMMNDI>
+        <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
+            <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+            <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="hiring_process_1">
+                <dc:Bounds x="114" y="63" width="534" height="389" />
+                <cmmndi:CMMNLabel />
+            </cmmndi:CMMNShape>
+            <cmmndi:CMMNShape id="PlanItem_1iqcbc3_di" cmmnElementRef="PlanItem_1">
+                <dc:Bounds x="150" y="96" width="100" height="80" />
+                <cmmndi:CMMNLabel />
+            </cmmndi:CMMNShape>
+        </cmmndi:CMMNDiagram>
+    </cmmndi:CMMNDI>
+</cmmn:definitions>

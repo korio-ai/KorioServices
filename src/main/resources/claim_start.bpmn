@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.2">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
   <bpmn:process id="Claim_Start" name="Provide initial claim information" isExecutable="true">
     <bpmn:documentation><![CDATA[Begin with this process when you want to start a new claim.  You will be asked for some basic information about the claimant and the policy.  Using the "discuss" and "assign" features, you can ask for assistance from others, including the policy holder.]]></bpmn:documentation>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_0t4ad5t</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0t4ad5t" sourceRef="StartEvent_1" targetRef="Task_12e3bo7" />
-    <bpmn:userTask id="Task_12e3bo7" name="Information to initiate the claim process" camunda:formKey="steve-form-key">
+    <bpmn:userTask id="Task_12e3bo7" name="Information to initiate the claim process">
       <bpmn:documentation>It is important that you provide complete and accurate information here.  Take the time to check your documents and records.</bpmn:documentation>
       <bpmn:extensionElements>
         <camunda:formData>
@@ -21,7 +21,7 @@
       <bpmn:outgoing>SequenceFlow_1v4tt50</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1v4tt50" sourceRef="Task_12e3bo7" targetRef="Task_075fkdc" />
-    <bpmn:userTask id="Task_075fkdc" name="Specify the type of claim" camunda:formKey="steve-form-key">
+    <bpmn:userTask id="Task_075fkdc" name="Specify the type of claim" camunda:formKey="claim_type">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="claimType" label="What Type of Claim Is This?" type="enum">
@@ -33,6 +33,35 @@
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1v4tt50</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ryi6dv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0v7xb7i">
+      <bpmn:incoming>SequenceFlow_0ryi6dv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15mkg2y</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0nya7h8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0ryi6dv" sourceRef="Task_075fkdc" targetRef="ExclusiveGateway_0v7xb7i" />
+    <bpmn:sequenceFlow id="SequenceFlow_15mkg2y" name="Property" sourceRef="ExclusiveGateway_0v7xb7i" targetRef="Task_1lcd6v5">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${claimType=='Property'}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0nya7h8" name="Auto" sourceRef="ExclusiveGateway_0v7xb7i" targetRef="Task_0misudk">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${claimType=='Auto'}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="Task_1lcd6v5" name="Property">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="address_city" label="City" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_15mkg2y</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_0misudk" name="Auto">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="vehicle_VIN" label="Vehicle VIN Number:" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0nya7h8</bpmn:incoming>
     </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -59,6 +88,41 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_009v3v5_di" bpmnElement="Task_075fkdc">
         <dc:Bounds x="494" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0v7xb7i_di" bpmnElement="ExclusiveGateway_0v7xb7i" isMarkerVisible="true">
+        <dc:Bounds x="651.0877742946709" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="711.1755485893418" y="113" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ryi6dv_di" bpmnElement="SequenceFlow_0ryi6dv">
+        <di:waypoint xsi:type="dc:Point" x="594" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="651" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="622.5" y="98" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_15mkg2y_di" bpmnElement="SequenceFlow_15mkg2y">
+        <di:waypoint xsi:type="dc:Point" x="676" y="95" />
+        <di:waypoint xsi:type="dc:Point" x="676" y="18" />
+        <di:waypoint xsi:type="dc:Point" x="769" y="18" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="670" y="50" width="43" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nya7h8_di" bpmnElement="SequenceFlow_0nya7h8">
+        <di:waypoint xsi:type="dc:Point" x="676" y="145" />
+        <di:waypoint xsi:type="dc:Point" x="676" y="231" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="231" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="680" y="181" width="23" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1d5ms0x_di" bpmnElement="Task_1lcd6v5">
+        <dc:Bounds x="769" y="-21" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0bdorcr_di" bpmnElement="Task_0misudk">
+        <dc:Bounds x="768" y="192" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
