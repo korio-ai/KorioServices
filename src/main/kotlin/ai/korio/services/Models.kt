@@ -17,7 +17,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val commandType: String, // NAVIGATE, GET or POST
             val commandExecutionURI: String  // TODO: explore Hateos, HAL and other hypermedia approaches.
     )
-
+    // TODO: Consider ENUMS and sealed classes in Kotlin, per: https://medium.com/grand-parade/6-magic-sugars-that-can-make-your-kotlin-codebase-happier-part-1-ceee3c2bc9d3
     data class CommandExecution (
             val instanceId: String,
             val activityType: String
