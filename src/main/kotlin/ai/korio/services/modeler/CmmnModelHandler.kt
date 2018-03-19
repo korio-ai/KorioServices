@@ -1,13 +1,11 @@
 package ai.korio.services.modeler
 
-import ai.korio.services.CamundaEngine
-import org.camunda.bpm.engine.repository.ProcessDefinition
+import ai.korio.services.CamundaEngineConfig
 import org.jvnet.hk2.annotations.Service
 import java.io.InputStream
 import org.camunda.bpm.model.cmmn.Cmmn
 import org.camunda.bpm.model.cmmn.CmmnModelInstance
 import org.camunda.bpm.model.cmmn.instance.Case
-import org.camunda.bpm.model.cmmn.instance.HumanTask
 import org.camunda.bpm.model.cmmn.instance.ProcessTask
 
 
@@ -16,7 +14,7 @@ class CmmnModelHandler {
 
     fun getCaseModelInstanceFromStream(caseDefinitionId: String): CmmnModelInstance {
 
-        val stream: InputStream = CamundaEngine().repositoryService!!.getCaseModel(caseDefinitionId)
+        val stream: InputStream = CamundaEngineConfig().repositoryService!!.getCaseModel(caseDefinitionId)
         return Cmmn.readModelFromStream(stream)
     }
 
@@ -24,7 +22,7 @@ class CmmnModelHandler {
      * Get process tasks (aka references to BPMN flows)
      * */
     fun getCaseModelsWithDetails(): MutableList<ModelerModels.CaseListItem> {
-        val repositoryCases = CamundaEngine().repositoryService!!.createCaseDefinitionQuery().latestVersion().list()
+        val repositoryCases = CamundaEngineConfig().repositoryService!!.createCaseDefinitionQuery().latestVersion().list()
         val cases: MutableList<ModelerModels.CaseListItem> = mutableListOf()
         repositoryCases.forEach { repositoryCase ->
             val modelInstance: CmmnModelInstance = getCaseModelInstanceFromStream(repositoryCase.id)
@@ -57,7 +55,7 @@ class CmmnModelHandler {
             var bpmnDefinitionId: String = ""
             if (processTask.process != null) { // test if no bpmn reference... should not be permitted by editor, mind you
                 // use key from ProcessTask and ".latestVersion" to get id of bpmn resource
-                bpmnDefinitionId = CamundaEngine().repositoryService!!.createProcessDefinitionQuery().processDefinitionKey(processTask.process).latestVersion().singleResult().id  //.processDefinitionName(processTask.process).singleResult().id
+                bpmnDefinitionId = CamundaEngineConfig().repositoryService!!.createProcessDefinitionQuery().processDefinitionKey(processTask.process).latestVersion().singleResult().id  //.processDefinitionName(processTask.process).singleResult().id
             } else {bpmnDefinitionId = "define process"}
             var documentation: String = ""
             processTask.documentations.forEach { document ->

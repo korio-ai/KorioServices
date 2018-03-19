@@ -1,26 +1,21 @@
 package ai.korio.services.cmmn
 
-import ai.korio.services.CamundaEngine
+import ai.korio.services.CamundaEngineConfig
 import ai.korio.services.CommandHandler
 import ai.korio.services.Models
-import org.camunda.bpm.engine.impl.cmmn.model.CmmnActivity
 import org.camunda.bpm.engine.repository.CaseDefinition
-import org.camunda.bpm.engine.repository.ProcessDefinition
 import org.camunda.bpm.engine.runtime.CaseExecution
 import org.camunda.bpm.engine.runtime.CaseInstance
-import org.camunda.bpm.model.cmmn.instance.PlanItemDefinition
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.springframework.stereotype.Service
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 @Service
 class CmmnHandler() {
 
     fun availableCaseDefinitions(): MutableList<CaseDefinition> {
-        val availableCaseDefinitions: MutableList<CaseDefinition> = CamundaEngine().repositoryService!!
+        val availableCaseDefinitions: MutableList<CaseDefinition> = CamundaEngineConfig().repositoryService!!
                 .createCaseDefinitionQuery()
                 .list()
         availableCaseDefinitions.forEach {
@@ -57,7 +52,7 @@ class CmmnHandler() {
 
     fun activateCaseFromDefinitionId(caseId: String, caseName: String): String {  //TODO get case definition ID from user selection
 
-        val caseService = CamundaEngine().caseService!!
+        val caseService = CamundaEngineConfig().caseService!!
         val dt = DateTime()
         val fmt = DateTimeFormat.forPattern("MMMM dd, yyyy, HH:mm")
         val now = fmt.print(dt)
@@ -74,7 +69,7 @@ class CmmnHandler() {
     * */
     fun getAllActiveCases(): MutableList<Models.MyCaseInstance> {
         val activeCases: MutableList<Models.MyCaseInstance> = mutableListOf()
-        val activeCaseService = CamundaEngine().caseService!!
+        val activeCaseService = CamundaEngineConfig().caseService!!
         var caseExecutionId: String = "" // needs to be initialized
         val cases: MutableList<CaseInstance> = activeCaseService.createCaseInstanceQuery()
                 .active()
@@ -106,7 +101,7 @@ class CmmnHandler() {
      * Gets plan items for a a specific case that are available, enabled but not yet active and that can be started
      * NB: a case "execution" is actually a planned item in a case instance.
      */
-    fun getAllEnabledPlanItems(caseInstanceId: String): List<CaseExecution> = CamundaEngine().caseService!!.createCaseExecutionQuery()
+    fun getAllEnabledPlanItems(caseInstanceId: String): List<CaseExecution> = CamundaEngineConfig().caseService!!.createCaseExecutionQuery()
           //  .caseInstanceBusinessKey(caseInstanceBusinessKey)
             .caseInstanceId(caseInstanceId)
           //  .enabled()

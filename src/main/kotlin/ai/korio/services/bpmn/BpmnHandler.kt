@@ -1,11 +1,10 @@
 package ai.korio.services.bpmn
 
-import ai.korio.services.CamundaEngine
+import ai.korio.services.CamundaEngineConfig
 import ai.korio.services.CommandHandler
 import ai.korio.services.DataCaptureHandler
 import ai.korio.services.Models
 import org.camunda.bpm.engine.runtime.ProcessInstance
-import org.camunda.bpm.engine.variable.VariableMap
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service
      * start an enabled plan item (e.g. BPMN flow) by case execution id
      */
     fun manuallyStartCaseExecutionPlanItem(caseExecutionId: String) {
-        val caseService = CamundaEngine().caseService!!  //TODO get one instance of case service on init and pass it around
+        val caseService = CamundaEngineConfig().caseService!!  //TODO get one instance of case service on init and pass it around
         // TODO pass in a map from Avro schema: caseService.manuallyStartCaseExecution(caseExecutionId, Map)
         caseService.manuallyStartCaseExecution(caseExecutionId) // starts a process with its id
         System.out.printf("\nattempted to manually start case execution with ID: ${caseExecutionId}")
@@ -27,14 +26,14 @@ import org.springframework.stereotype.Service
      */
     fun getActiveBPMNProcessesById(caseInstanceId: String):  MutableList<Models.MyCaseProcessInstanceAndDef> {
         val caseProcessInstanceAndDef: MutableList<Models.MyCaseProcessInstanceAndDef> = mutableListOf() // holds combo of instance and definition
-        val BPMNProcessInstances: MutableList<ProcessInstance> = CamundaEngine().runtimeService!!
+        val BPMNProcessInstances: MutableList<ProcessInstance> = CamundaEngineConfig().runtimeService!!
                 .createProcessInstanceQuery()
                 .caseInstanceId(caseInstanceId)
                 .active()
                 .list()
         BPMNProcessInstances.forEach { //ProcessInstance only holds reference to a few things, including the Process Definition
             System.out.printf("\nActive BPMN process instance definition ID: ${it.processDefinitionId} and ${it.processInstanceId}")
-            val processDefinition = CamundaEngine().repositoryService!!.getProcessDefinition(it.processDefinitionId) // query to get info
+            val processDefinition = CamundaEngineConfig().repositoryService!!.getProcessDefinition(it.processDefinitionId) // query to get info
             val executionCommands: MutableList<Models.Command> = CommandHandler().getProcessInstanceCommands(it, processDefinition) // send both the instance and definition to command handler
             val bpmnCaseProcessInfo = Models.MyCaseProcessInstanceAndDef(
                     it.id,
@@ -81,7 +80,7 @@ import org.springframework.stereotype.Service
     fun getCurrentTask(processInstanceId: String): MutableList<Models.MyTask> {
         System.out.println("\ngetCurrentTask called with instanceId: ${processInstanceId}")
         val currentTasks: MutableList<Models.MyTask> = mutableListOf()
-        val tasks = CamundaEngine().taskService!!.createTaskQuery()
+        val tasks = CamundaEngineConfig().taskService!!.createTaskQuery()
                 .processInstanceId(processInstanceId)  // TODO: enable .taskAsignee(user)
                 .initializeFormKeys()  // necessary or form key will not populate and error will be thrown
                 //.taskAssignee(user)
@@ -140,7 +139,7 @@ import org.springframework.stereotype.Service
     fun finishCurrentGetNextTask(capturedData: Models.CapturedData): MutableList<Models.MyTask>  {
         System.out.println("\nfinishCurrentGetNextTask called with object id: ${capturedData.objectId}")
         val variableMap: Map<String, Any> = DataCaptureHandler().parseFormPayload(capturedData) // need to pass the JsonNode through Jackson to parse to a variable map
-        CamundaEngine().taskService!!.complete(capturedData.objectId, variableMap) //NB: creates variables on process instance, not task!!
+        CamundaEngineConfig().taskService!!.complete(capturedData.objectId, variableMap) //NB: creates variables on process instance, not task!!
         val nextTasks: MutableList<Models.MyTask> = getCurrentTask(capturedData.processInstanceId)
         return nextTasks //almost always a single task
     }

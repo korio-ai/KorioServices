@@ -1,20 +1,7 @@
 package ai.korio.services
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.camunda.bpm.engine.form.FormField
 import org.camunda.bpm.engine.task.Task
-import org.camunda.bpm.engine.variable.VariableMap
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
-import java.util.HashMap
-import org.h2.value.DataType.readValue
-import java.awt.SystemTray
 
 
 /**
@@ -29,8 +16,8 @@ class DataCaptureHandler {
     fun getDataCaptureFields(task: Task): MutableList<Models.FieldDataCapture> {
         val dataCaptureFields: MutableList<Models.FieldDataCapture> = mutableListOf()
             // TODO: fetch form data from FormService per: https://docs.camunda.org/javadoc/camunda-bpm-platform/7.8/org/camunda/bpm/engine/FormService.html
-        // val variableMap: VariableMap = CamundaEngine().formService!!.getTaskFormVariables(task.id) //gets variables and values as key-value pair
-        val taskFormData = CamundaEngine().formService!!.getTaskFormData(task.id)
+        // val variableMap: VariableMap = CamundaEngineConfig().formService!!.getTaskFormVariables(task.id) //gets variables and values as key-value pair
+        val taskFormData = CamundaEngineConfig().formService!!.getTaskFormData(task.id)
         val formFields: List<FormField> =  taskFormData.formFields
 
         // TODO:  "value" seems to = default value, consider using it for placeholder??
@@ -94,7 +81,7 @@ class DataCaptureHandler {
     }
 
     fun setCaseName(itemId: String, name: String) {  //NOTE: setting a case variable for name as business key can't be changed??
-        val engine = CamundaEngine()
+        val engine = CamundaEngineConfig()
         val currentTask = engine.taskService!!.createTaskQuery().taskId(itemId).singleResult() // gets a single result from query instead of typical list
         val caseExecution = engine.caseService!!.createCaseExecutionQuery().caseInstanceId(currentTask.caseInstanceId).list() // executionId is null, must use instanceId
         caseExecution.forEach { // variables are only set on executions, not case instances?? There are multiple executions for the instance TODO: find out why
