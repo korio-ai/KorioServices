@@ -1,6 +1,7 @@
-package ai.korio.services.modeler
+package ai.korio.services.modeler.cmmn
 
 import ai.korio.services.CamundaEngineConfig
+import ai.korio.services.modeler.ModelerModels
 import org.jvnet.hk2.annotations.Service
 import java.io.InputStream
 import org.camunda.bpm.model.cmmn.Cmmn

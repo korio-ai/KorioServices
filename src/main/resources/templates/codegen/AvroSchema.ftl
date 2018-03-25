@@ -1,6 +1,6 @@
 {
             "type": "record",
-            "name": ${name},
+            "name": "${name}",
             "aliases": ["LinkedLongs"],                      // old name for this
             "fields" : [
             {"name": "value", "type": "long"},             // each element has a long

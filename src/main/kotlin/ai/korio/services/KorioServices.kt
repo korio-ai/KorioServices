@@ -19,5 +19,5 @@ fun main(args: Array<String>) {
     CmmnHandler().availableCaseDefinitions()  //TODO also activates cases and checks for active BPMN flows for now
  //   CmmnHandler().activateCaseFromDefinitionId("Claim_Case_1:1:36", "Work on your claim started December 21, 2017")
  //   CmmnHandler().activateCaseFromDefinitionId("SimpleCase:1:36", "stevekey2")
-    CodeGen().initiatElementCodeGen(true,"AvroSchema", "testDefinition", "testDefinitionId", "testModelElement")
+    CodeGen().initialElementCodeGen(true,"AvroSchema", "BPMN", "Claim_Start:1:38", "Task_0misudk")
 }

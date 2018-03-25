@@ -13,19 +13,19 @@ class CodeGen {
 /**
 * For ALLOWED ELEMENTS ONLY, going element at a time, generates FULL code if deep is true.  NOTE: some elements, like DataSource,
  * may generate multiple files.
- * @param deep false if code gen is supressed.  Usually still generates boilerplate code for copy/paste, but does NOT overwrite the code file
+ * @param deep false if code gen is suppressed.  Usually still generates boilerplate code for copy/paste, but does NOT overwrite the code file
  * @param codeArtifactType specific type of code to create as a chunk; NOTE: elements may generate multiple code chunks
- * @param camDefinitionType whether Camunda Process, CMMN or DMN model
+ * @param camDefinitionType whether Camunda BPMN, CMMN or DMN model
  * @param camDefinitionId the id of the Camunda definition
- * @param modelElement the id of the actual element
+ * @param modelElementId the id of the actual element
 * */
-    fun initiatElementCodeGen(deep: Boolean, codeArtifactType: String, camDefinitionType: String, camDefinitionId: String, modelElement: String) {
+    fun initialElementCodeGen(deep: Boolean, codeArtifactType: String, camDefinitionType: String, camDefinitionId: String, modelElementId: String) {
         val cfg = CodeGen().cfg
         when (codeArtifactType){  // TODO: ideally this would be configurable as the only piece that needs hard-coding is the model definition
-            "AvroSchema" -> DataComponentCodeGen().populateAvroSchemaModel(deep, camDefinitionType, camDefinitionId, modelElement, cfg)
+            "AvroSchema" -> CodeGenDataComponent().populateAvroSchemaModel(deep, camDefinitionType, camDefinitionId, modelElementId, cfg)
             "MobXStateTree" -> System.out.println("should generate mobx state tree")
             else -> {
-                System.out.println("no code generator registered for ${codeArtifactType}. Initiated by code gen on ${modelElement}")
+                System.out.println("no code generator registered for ${codeArtifactType}. Initiated by code gen on ${modelElementId}")
             }
         }
     }
@@ -36,15 +36,23 @@ class CodeGen {
      * @param model kotlin data class returned by code type handler
      * @param template the Freemarker template template returned by code type handler
      * */
-    fun generateCodeToTemplate(model: Any, template: Template): String {
+    fun generateCodeToComponent(model: Any, template: Template): String {
 
         val out = OutputStreamWriter(System.out)
         template.process(model, out)
 
-        return out.toString()
+        return out.toString() //FIXME: send to Mongo via CodeGenPlanModelInstance??
 
     }
-
+    /**
+     * Creates the code file.  May be a composition of multiple template outputs
+     * */
+    fun composeCodeComponentsToFile() {}
+    /**
+     * Executes a Pull Request on the provided source code repo
+     * @param repository the repository to which the pull request is delivered.
+     * */
+    fun sendToPullRequest(repository: String) {}
 
 
 }

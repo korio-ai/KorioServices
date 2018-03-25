@@ -24,8 +24,23 @@ class CodeGenPlan {
      * */
     data class CodeGenElementInstance(
             val elementId: String?,
-            val suppress: Boolean,
+            val deep: Boolean, // If false, suppresses overwriting code gen and offers shallow code snippets for use in custom code
             val dirty: Boolean
+    )
+    /**
+     * Defines the code file that will be generated from one or more code components
+     * */
+    data class CodeGenFileComponents(
+            val fileName: String,
+            val codeComponents: MutableList<CodeComponent>?
+
+    )
+    /**
+     * The source code saved at the component level... aggregated to the file level by CodeGenFileComponents
+     * */
+    data class CodeComponent(
+            val componentName: String,
+            val sourceCode: String
     )
     /**
      * Gets the code gen plan from all the available seed projects

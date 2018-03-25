@@ -1,8 +1,6 @@
-package ai.korio.services.modeler
+package ai.korio.services.modeler.cmmn
 
-import org.camunda.bpm.model.cmmn.instance.Case
-import org.camunda.bpm.model.cmmn.instance.HumanTask
-import org.camunda.bpm.model.cmmn.instance.ProcessTask
+import ai.korio.services.modeler.ModelerModels
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
