@@ -22,8 +22,8 @@ class BpmnModelHandler {
             val elements: MutableList<BpmnElement> // initial elements
     )
 
-    data class BpmnElement (  // FIXME: this isn't really used and probably can't be used with the builder
-            val type: String?, // element type
+    data class BpmnElement (  // FIXME: this is kind of being used to set all possible Korio extensions in setKorioModelElementAttributes
+            val type: String?, // IF used for creating the full range of Korio extensions, all element types that need a Korio extension must have a BpmnElement
             val id: String?,
             val name: String?
     )
@@ -40,12 +40,17 @@ class BpmnModelHandler {
      * @param template allows a starter process to be used to initiate different types of processes
      * */
     fun newBpmnInstanceFromTemplate(seedData: SeedData): BpmnSeedTemplate { // FIXME: this is a heavy object to return.  Really not needed.
-         val seedTemplate: BpmnSeedTemplate = getSeedTemplate(seedData)  // FIXME: this isn't really used and probably can't be used with the builder
-         val modelInstance: BpmnModelInstance = when (seedData.type) {
+
+        val seedTemplate: BpmnSeedTemplate = getSeedTemplate(seedData)  // FIXME: this isn't really used and probably can't be used with the builder
+        // TODO: consider creating extensions here...and then pass them to the modelInstance after the when clause
+
+        val modelInstance: BpmnModelInstance = when (seedData.type) {
+
            "CaseProcess" -> {
                Bpmn.createExecutableProcess(seedTemplate.id)
                     .name(seedTemplate.name)
                     .startEvent()
+                    .userTask()
                     .userTask()
                     .done()
 
@@ -67,6 +72,9 @@ class BpmnModelHandler {
                     .done()
             }
         }
+        // NOTE: custom/missing/korio attributes now set on first click of element, not at new model
+        BpmnPropertiesHandler().setKorioModelElementAttributes(modelInstance, seedTemplate)
+        // deploy the new model instance
         return DeploymentHandler().processDeploymentOnNew(seedTemplate, modelInstance)
 
     }
@@ -77,10 +85,13 @@ class BpmnModelHandler {
 
 
          when (seedData.type) {
-            "CaseProcess" -> {
+            "CaseProcess" -> { // FIXME: move elem
                 val elements: MutableList<BpmnElement> = mutableListOf() // FIXME: this isn't really used and probably can't be used with the builder
                 val element1: BpmnElement = BpmnElement("startEvent", "startEvent_" + UUID.randomUUID(), seedData.name + "_forStartEvent")
                 elements.add(element1)
+                // FIXME: this currently does nothing
+                val element2: BpmnElement = BpmnElement("userTask", "userTaskSteve_" + UUID.randomUUID(), seedData.name + "_forUserTask")
+                elements.add(element2)
                 val caseSeed: BpmnSeedTemplate = BpmnSeedTemplate(
                         seedData.type,
                         seedData.parentId,

@@ -4,6 +4,10 @@ import freemarker.template.Configuration
 import freemarker.template.Template
 import java.io.OutputStreamWriter
 
+
+/**
+ * Assumes that code is generated largely for the front end.  See readme.
+ * */
 class CodeGen {
 
     // Initialize config once in class per: https://kotlinlang.org/docs/reference/delegated-properties.html

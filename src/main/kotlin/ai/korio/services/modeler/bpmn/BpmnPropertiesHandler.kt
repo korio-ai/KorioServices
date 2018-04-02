@@ -1,22 +1,31 @@
 package ai.korio.services.modeler.bpmn
 
 import ai.korio.services.KorioServicesApplication
-import org.camunda.bpm.engine.impl.util.json.JSONObject
+import ai.korio.services.deployment.DeploymentHandler
 import org.camunda.bpm.model.bpmn.BpmnModelInstance
+import org.camunda.bpm.model.bpmn.impl.instance.bpmndi.BpmnDiagramImpl
 import org.camunda.bpm.model.bpmn.instance.Process
 import org.camunda.bpm.model.bpmn.instance.UserTask
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
 import org.camunda.bpm.model.xml.type.ModelElementType
-import javax.xml.bind.Element
-import ai.korio.services.modeler.bpmn.TaskPropertiesHandler
+import org.camunda.bpm.model.bpmn.instance.ExtensionElements
+import org.camunda.bpm.model.bpmn.instance.Task
+
 
 class BpmnPropertiesHandler {
 
     fun getModelDefinition(camDefinitionId: String): BpmnModelInstance = KorioServicesApplication().processEngine.repositoryService.getBpmnModelInstance(camDefinitionId)
-    fun getModelElementInstance(modelElementId: String, bpmnModelInstance: BpmnModelInstance): ModelElementInstance = bpmnModelInstance.getModelElementById<ModelElementInstance>(modelElementId)
-    fun getModelElementType(modelElementId: String, bpmnModelInstance: BpmnModelInstance): ModelElementType = getModelElementInstance(modelElementId, bpmnModelInstance).elementType
+    // FIXME: tasks created in the modeler are not getting a modelElementInstance from this. On first click, test for null an create/add the element to the model instance??
+    fun getModelElementInstance(modelElementId: String, bpmnModelInstance: BpmnModelInstance): ModelElementInstance? = bpmnModelInstance.getModelElementById<ModelElementInstance>(modelElementId)
+     //fun getModelElementType(modelElementId: String, bpmnModelInstance: BpmnModelInstance): ModelElementType = getModelElementInstance(modelElementId, bpmnModelInstance).elementType
     fun getModelElementTypeChildTypes(parentElementType: ModelElementType): MutableList<ModelElementType> = parentElementType.childElementTypes
     fun getModelElementAttributeValue(modelElementInstance: ModelElementInstance, attributeName: String): String = modelElementInstance.getAttributeValue(attributeName)
+
+    // FIXME: replace ElementAttribute with this:
+    data class BpmnModel(
+            val modelId: String,
+            val elements: MutableList<ElementAttribute>?
+    )
 
     data class ElementAttribute(
             val name: String,
@@ -30,21 +39,25 @@ class BpmnPropertiesHandler {
             val valueNumber: Number?
             )
     /**
-     * For each element type, gets the Model Element Attributes of the selected element
+     * On a "click" in the modeler, for each element type, gets the Model Element Attributes of the selected element, including
+     * Camunda and Korio extension elements and their attributes
      * */
-    fun getModelElementAttributes(camDefinitionId: String, modelElementId: String): List<ElementAttribute> {
+    fun getAndSetModelElementAttributes(camDefinitionId: String, modelElementId: String, modelElementType: String, modelElementName: String, isDirty: String): BpmnModel {
         val bpmnModelInstance = getModelDefinition(camDefinitionId)
-        val modelElementInstance = getModelElementInstance(modelElementId, bpmnModelInstance)
-        val elementType: String = modelElementInstance.elementType.typeName
+        System.out.println("BPMN Model Instance before changes is based on Definition Id of: " + camDefinitionId)
+        // While model seems to exist on the front-end, new elements don't exist on the backend. If the element instance doesn't exist, set it
+        val modelElementInstance = getModelElementInstance(modelElementId, bpmnModelInstance) ?: setModelElementInstance(modelElementId, bpmnModelInstance, modelElementType)
         var elementAttributes:  MutableList<ElementAttribute> = mutableListOf()
-        System.out.println("model element type is: " + elementType)
+        System.out.println("model element type is: " + modelElementInstance.elementType.typeName)
         when (modelElementInstance.elementType.typeName) {
             "userTask" -> {
                 System.out.println("this is a user task")
                 val userTask = modelElementInstance as UserTask
-                elementAttributes = TaskPropertiesHandler().getTaskElementAttributes(userTask) // fetch all the base and extended attributes and their values
-                }
-            "process" -> {
+                // get the element's attributes, setting up any missing/custom/korio attributes if not already on the UserTask model class
+                elementAttributes = TaskPropertiesHandler().getAndSetUserTaskElementsAndAttributes(userTask, modelElementName, isDirty) // fetch all the base and extended attributes and their values
+
+            }
+            "process" -> {  // TODO: move guts to ProcessPropertiesHandler class
                 System.out.println("this is a process")
                 val process = modelElementInstance as Process
                 process.elementType.attributes.map {
@@ -57,13 +70,88 @@ class BpmnPropertiesHandler {
                 elementAttributes.add(ElementAttribute("not a registered element", "string", "base", "not a registered element", "string","not a registered element", 0, "not a registered element", 0))
                 }
         }
-        // modelElementInstance.setAttributeValue("name", "SteveSetName")
-        return elementAttributes
+        // need to deploy this updated process for it to be available to the front-end
+        val newCamDefinitionId: String = DeploymentHandler().processDeploymentOnElementUpdate(camDefinitionId, bpmnModelInstance)
+        val bpmnModel = BpmnModel(newCamDefinitionId,elementAttributes)
+        // TODO: need this to RETURN both the newCamDefinitionId AND, I guess??, the elementAttributes
+        //return elementAttributes
+        return bpmnModel
     }
 
-    fun setModelElementAttribute(camDefinitionId: String, modelElementId: String) {
-        // TODO: on setting an attribute, determine whether the process needs to be DEPLOYED to fetch and show these
-        // changes in the modeler
+    /**
+     * If Model Element Instance doesn't yet exist on the backend, create it AND set its TYPE
+     * @param modelElementId the selected model element's id
+     * @param bpmnModelInstance the instance of the model
+     * @param modelElementType from the front-end, whether it is a bpmn:UserTask, etc.,
+     * */
+    fun setModelElementInstance(modelElementId: String, bpmnModelInstance: BpmnModelInstance, modelElementType: String): ModelElementInstance {
+        val bpmnModelInstance = when (modelElementType) {
+            "bpmn:UserTask" -> {bpmnModelInstance.newInstance(UserTask::class.java, modelElementId)}
+
+            else -> {bpmnModelInstance.newInstance(Task::class.java, modelElementId)}
+        }
+
+       return bpmnModelInstance
+    }
+
+
+
+    /**
+     * At model instance creation, creates Korio Extension Model Element Attributes
+     * */
+    // FIXME: left this shell, but it isn't called as attributes are added on first click, which could be a dangerous assumption.
+    fun setKorioModelElementAttributes(modelInstance: BpmnModelInstance, seedTemplate: BpmnModelHandler.BpmnSeedTemplate)/*: List<ElementAttribute>*/ {
+        //val bpmnModelInstance = getModelDefinition(camDefinitionId)
+        //val modelElementInstance = getModelElementInstance(modelElementId, bpmnModelInstance)
+        // gets the element type onto which the extensions will eventually be attached
+        //val elementType: String = modelElementInstance.elementType.typeName
+        //System.out.println("model element type is: " + elementType)
+
+
+        seedTemplate.elements.forEach {
+
+            when (it.type) {
+                "userTask" -> {
+                    // create a UserTask model instance
+                    val userTask = modelInstance.newInstance(UserTask::class.java)
+                    System.out.println("this is a user task")
+                                       // see if there are extension elements for this model element
+                    var extensionElements = userTask.getExtensionElements()
+                    if (extensionElements == null) { // ...if no extension elements, add it to the overall model instance
+                        extensionElements = modelInstance.newInstance(ExtensionElements::class.java)
+                            // ...then attach it to userTask modelInstance
+                        userTask.setExtensionElements(extensionElements)
+                    }
+                    // next, you have to get the existing extension elements
+                    // val elements: MutableCollection<ModelElementInstance> = extensionElements.elements
+                    // need elementAttributes to pass to the setKorioTaskElements function so it can add missing extension elements
+                    //val steveExecutionListener = modelInstance.newInstance(CamundaExecutionListener::class.java)
+                    //extensionElements.elements.add(steveExecutionListener)
+                // FIXME: is any of this whole function even necessary?...
+                    /*val camundaExecutionListener = userTask.modelInstance.newInstance(CamundaExecutionListener::class.java)
+                    camundaExecutionListener.camundaClass = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+                    userTask.builder().addExtensionElement(camundaExecutionListener)
+                    val newExtensionElements = extensionElements.elementsQuery.filterByType(CamundaExecutionListener::class.java).singleResult()
+                    System.out.println("newly added extension element: " + newExtensionElements.camundaFields.toString())
+                    */
+
+                    // TaskPropertiesHandler().setKorioTaskElementAttributes(userTask) // fetch all the base and extended attributes and their values
+                }
+                else -> {
+                    System.out.println("this element type is not yet registered")
+                }
+            }
+
+        }
+
+        // now get and return all the elements to the front end
+       // return getAndSetModelElementAttributes(camDefinitionId, modelElementId)
+    }
+    /**
+     * Adds a single, non-standard attribute to an element
+     * */
+    fun addCustomModelElementAttribute() {
+
     }
 
 }
