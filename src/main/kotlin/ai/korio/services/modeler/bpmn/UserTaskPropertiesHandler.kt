@@ -7,7 +7,31 @@ import org.camunda.bpm.model.bpmn.instance.camunda.CamundaExecutionListener
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaField
 
 
-class TaskPropertiesHandler {
+
+class UserTaskPropertiesHandler {
+
+    data class UserTaskModel(
+            val modelId: String,
+            val id: String,
+            val name: ElementModel.StringElement,
+            val assignee: ElementModel.UserElement?,
+            val candidateUsers: MutableList<ElementModel.UserElement>?,
+            val candidateGroups: MutableList<ElementModel.UserGroupElement>?,
+            val dueDate: ElementModel.DateElement?,
+            val wizardFormKey: ElementChannelModel.WizardFormFlow?,
+            val expertUserFormKey: ElementChannelModel.ExpertUserFormFlow?, // wizard is default, this element aggregates to create longer forms, assuming the same doer
+            val chatFormKey: ElementChannelModel.ChatFormFlow?,
+            val smsFormKey: ElementChannelModel.SMSFormFlow?,
+            val emailFormKey: ElementChannelModel.EmailFormFlow?,
+            val voiceFormKey: ElementChannelModel.VoiceFormFlow? // attempts to transcribe voice calls to form data e.g. using Twilio NLU
+
+
+
+    )
+
+
+
+
     /**
      *
      * */

@@ -3,7 +3,6 @@ package ai.korio.services.modeler.bpmn
 import ai.korio.services.KorioServicesApplication
 import ai.korio.services.deployment.DeploymentHandler
 import org.camunda.bpm.model.bpmn.BpmnModelInstance
-import org.camunda.bpm.model.bpmn.impl.instance.bpmndi.BpmnDiagramImpl
 import org.camunda.bpm.model.bpmn.instance.Process
 import org.camunda.bpm.model.bpmn.instance.UserTask
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
@@ -21,7 +20,7 @@ class BpmnPropertiesHandler {
     fun getModelElementTypeChildTypes(parentElementType: ModelElementType): MutableList<ModelElementType> = parentElementType.childElementTypes
     fun getModelElementAttributeValue(modelElementInstance: ModelElementInstance, attributeName: String): String = modelElementInstance.getAttributeValue(attributeName)
 
-    // FIXME: replace ElementAttribute with this:
+
     data class BpmnModel(
             val modelId: String,
             val elements: MutableList<ElementAttribute>?
@@ -54,7 +53,7 @@ class BpmnPropertiesHandler {
                 System.out.println("this is a user task")
                 val userTask = modelElementInstance as UserTask
                 // get the element's attributes, setting up any missing/custom/korio attributes if not already on the UserTask model class
-                elementAttributes = TaskPropertiesHandler().getAndSetUserTaskElementsAndAttributes(userTask, modelElementName, isDirty) // fetch all the base and extended attributes and their values
+                elementAttributes = UserTaskPropertiesHandler().getAndSetUserTaskElementsAndAttributes(userTask, modelElementName, isDirty) // fetch all the base and extended attributes and their values
 
             }
             "process" -> {  // TODO: move guts to ProcessPropertiesHandler class
@@ -135,7 +134,7 @@ class BpmnPropertiesHandler {
                     System.out.println("newly added extension element: " + newExtensionElements.camundaFields.toString())
                     */
 
-                    // TaskPropertiesHandler().setKorioTaskElementAttributes(userTask) // fetch all the base and extended attributes and their values
+                    // UserTaskPropertiesHandler().setKorioTaskElementAttributes(userTask) // fetch all the base and extended attributes and their values
                 }
                 else -> {
                     System.out.println("this element type is not yet registered")
