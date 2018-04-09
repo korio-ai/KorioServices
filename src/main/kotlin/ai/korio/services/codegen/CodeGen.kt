@@ -35,7 +35,7 @@ class CodeGen {
     }
 
     /**
-     * Each type of codeType Handler fills out its model and calls back into this function to
+     * Each type of codeType CamundaElementSourceCode fills out its model and calls back into this function to
      * join model with template.
      * @param model kotlin data class returned by code type handler
      * @param template the Freemarker template template returned by code type handler
@@ -45,7 +45,7 @@ class CodeGen {
         val out = OutputStreamWriter(System.out)
         template.process(model, out)
 
-        return out.toString() //FIXME: send to Mongo via CodeGenPlanModelInstance??
+        return out.toString() //FIXME: send to Mongo via CodeGenPlanModel??
 
     }
     /**

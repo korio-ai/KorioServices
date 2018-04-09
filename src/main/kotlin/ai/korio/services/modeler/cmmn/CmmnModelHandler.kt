@@ -51,7 +51,7 @@ class CmmnModelHandler {
         val processTasks: MutableList<ModelerModels.CaseProcessTaskListItem> = mutableListOf()
         val elementInstances = modelInstance.getModelElementsByType(processTaskType) // For ModelElementInstance, see: https://docs.camunda.org/javadoc/camunda-bpm-platform/7.8/org/camunda/bpm/model/xml/instance/ModelElementInstance.html
         elementInstances.forEach { elementInstance ->
-            val processTask: ProcessTask = elementInstance as ProcessTask //cast a generic Model Element Instance to ProcessTask
+            val processTask: ProcessTask = elementInstance as ProcessTask //cast a generic Model CamundaElement Instance to ProcessTask
             System.out.println("process task name is: " + processTask.name  + " id: " + processTask.id + " process: " + processTask.process )
             var bpmnDefinitionId: String = ""
             if (processTask.process != null) { // test if no bpmn reference... should not be permitted by editor, mind you

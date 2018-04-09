@@ -1,27 +1,11 @@
 package ai.korio.services
 
+import ai.korio.services.commands.CommandHandler
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import org.camunda.bpm.engine.impl.core.variable.scope.VariableStore
-import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity
-import org.camunda.bpm.engine.impl.persistence.entity.VariableInstanceEntity
-import org.camunda.bpm.engine.task.DelegationState
-import org.joda.time.DateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 class Models {  //TODO: Camunda already has many of these models... why recreate them???
 
-    data class Command(
-            val commandName: String,
-            val commandType: String, // NAVIGATE, GET or POST
-            val commandExecutionURI: String  // TODO: explore Hateos, HAL and other hypermedia approaches.
-    )
-    // TODO: Consider ENUMS and sealed classes in Kotlin, per: https://medium.com/grand-parade/6-magic-sugars-that-can-make-your-kotlin-codebase-happier-part-1-ceee3c2bc9d3
-    data class CommandExecution (
-            val instanceId: String,
-            val activityType: String
-    )
     /**
      * passes fields used to publish the object in a standard way. Publishes each field from
      * either WIP (Camunda) or a test or production content store.
@@ -64,7 +48,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val caseId: String,
             val caseName: String,
             val caseKey: String,
-            val caseEnabledCommands: List<Command>
+            val caseEnabledCommands: List<CommandHandler.Command>
     )
 
     data class MyCaseDefinition(
@@ -77,7 +61,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
         val deploymentId: String?, // The deployment id of the case definition.
         val tenantId: String?, // The tenant id of the case definition.
         val historyTimeToLive: Int?, // History time to live value of the case definition. Is used within History cleanup.
-        val enabledCommands: List<Command>
+        val enabledCommands: List<CommandHandler.Command>
     )
 
     /*
@@ -98,7 +82,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val active:	Boolean, // A flag indicating whether the case instance is active or not.
             val completed: Boolean,	// A flag indicating whether the case instance is completed or not.
             val tenantId: String?, //The tenant id of the case instance.
-            val enabledCommands: List<Command>
+            val enabledCommands: List<CommandHandler.Command>
     )
 
     /**
@@ -119,7 +103,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val parentId: String?,
             val required: Boolean,
             val tenantId: String?,
-            val enabledCommands: List<Command>
+            val enabledCommands: List<CommandHandler.Command>
     )
 
     /**
@@ -147,7 +131,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val definitionTenantId: String?,	// (tenant) The tenant id of the process definition.
             val versionTag:	String?,	//The version tag of the process definition.
             val historyTimeToLive:	Int?, //History time to live value of the process definition. Is used within History cleanup.
-            val enabledCommands: List<Command>
+            val enabledCommands: List<CommandHandler.Command>
     )
 
     /**
@@ -176,7 +160,7 @@ class Models {  //TODO: Camunda already has many of these models... why recreate
             val taskDefinitionKey:  String, //	The task definition key.
       //  val formKey:  String?, // FIXME: RUNTIME ERROR: The form key is not initialized. You must call initializeFormKeys() on the task query before you can retrieve the form key.	If not null, the form key for the task.
             val tenantId:  String?, //	If not null, the tenantId for the task.
-            val enabledCommands: List<Command>,
+            val enabledCommands: List<CommandHandler.Command>,
             val formKey: String?, // for custom layouts. if is not null AND if form markup exists, following fields will be ignored
             val dataCaptureFields: List<FieldDataCapture>? // only for user tasks
     )

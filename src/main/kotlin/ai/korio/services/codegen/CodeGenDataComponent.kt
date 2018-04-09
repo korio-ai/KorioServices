@@ -15,6 +15,7 @@ class CodeGenDataComponent(){
 
     /**
      * Model used to generate the data component of the code base, including schemas, state management, etc.
+     * TODO: merge with data classes in modeler/bpmn
      * */
     data class DataCodeGenModel(
             val name: String,

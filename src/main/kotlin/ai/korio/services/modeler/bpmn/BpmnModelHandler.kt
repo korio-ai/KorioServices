@@ -15,7 +15,7 @@ import java.util.stream.Stream
 class BpmnModelHandler {
 
     data class BpmnSeedTemplate (
-            val type: String?, // Usually CaseProcess or DataService
+            val type: String?, // Usually CaseProcess or DataServiceRef
             val parentId: String?, // Usually a case id
             val id: String?,
             val name: String?,
@@ -55,7 +55,7 @@ class BpmnModelHandler {
                     .done()
 
             }
-            "DataService" -> {
+            "DataServiceRef" -> {
                 Bpmn.createExecutableProcess(seedTemplate.id)
                     .name(seedTemplate.name)
                     .startEvent()
@@ -101,7 +101,7 @@ class BpmnModelHandler {
                 )
                 return caseSeed
             }
-            "DataService" -> {
+            "DataServiceRef" -> {
                 val elements: MutableList<BpmnElement> = mutableListOf() // FIXME: this isn't really used and probably can't be used with the builder
                 val element1: BpmnElement = BpmnElement("startEvent", "startEvent_" + UUID.randomUUID(), seedData.name + "_forStartEvent")
                 elements.add(element1)

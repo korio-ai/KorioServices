@@ -4,7 +4,7 @@ package ai.korio.services.cmmn
 import ai.korio.services.Models
 import ai.korio.services.Models.*
 import ai.korio.services.bpmn.BpmnHandler
-import org.camunda.bpm.engine.runtime.CaseInstance
+import ai.korio.services.commands.CommandHandler
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
@@ -92,13 +92,13 @@ class CmmnController {
     // FIXME: move to BpmnController... if two controller classes work!!
     // FIXME: shouldn't really be a POST in this case!!
     @PostMapping(path = arrayOf("bpmn/bpmn-process-description"), produces = arrayOf("application/json"))
-    fun describeProcess(@RequestBody commandExecution: CommandExecution) {
+    fun describeProcess(@RequestBody commandExecution: CommandHandler.Command.CommandExecution) {
         BpmnHandler().getBpmnProcessDescription(commandExecution.instanceId, commandExecution.activityType)
 
     }
 
     @PostMapping(path = arrayOf("bpmn/bpmn-process-start"), produces = arrayOf("application/json"))
-    fun startBpmnProcess(@RequestBody commandExecution: CommandExecution) {
+    fun startBpmnProcess(@RequestBody commandExecution: CommandHandler.Command.CommandExecution) {
         BpmnHandler().startBpmnProcess(commandExecution.instanceId, commandExecution.activityType)
 
     }

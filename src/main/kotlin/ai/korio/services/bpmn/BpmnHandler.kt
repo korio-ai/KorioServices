@@ -1,7 +1,7 @@
 package ai.korio.services.bpmn
 
 import ai.korio.services.CamundaEngineConfig
-import ai.korio.services.CommandHandler
+import ai.korio.services.commands.CommandHandler
 import ai.korio.services.DataCaptureHandler
 import ai.korio.services.Models
 import org.camunda.bpm.engine.runtime.ProcessInstance
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service
         BPMNProcessInstances.forEach { //ProcessInstance only holds reference to a few things, including the Process Definition
             System.out.printf("\nActive BPMN process instance definition ID: ${it.processDefinitionId} and ${it.processInstanceId}")
             val processDefinition = CamundaEngineConfig().repositoryService!!.getProcessDefinition(it.processDefinitionId) // query to get info
-            val executionCommands: MutableList<Models.Command> = CommandHandler().getProcessInstanceCommands(it, processDefinition) // send both the instance and definition to command handler
+            val executionCommands: MutableList<CommandHandler.Command> = CommandHandler().getProcessInstanceCommands(it, processDefinition) // send both the instance and definition to command handler
             val bpmnCaseProcessInfo = Models.MyCaseProcessInstanceAndDef(
                     it.id,
                     it.processDefinitionId,
@@ -87,7 +87,7 @@ import org.springframework.stereotype.Service
                 //.active() // active is not a property of task directly, so it might be up the inheritance chain...
                 .list() // should only return the current task.
         tasks.forEach {
-            val taskCommands: MutableList<Models.Command> = CommandHandler().getTaskCommands(it) // send both the instance and definition to command handler
+            val taskCommands: MutableList<CommandHandler.Command> = CommandHandler().getTaskCommands(it) // send both the instance and definition to command handler
             val dataCaptureFields: MutableList<Models.FieldDataCapture> = DataCaptureHandler().getDataCaptureFields(it)
             val currentTaskItem = Models.MyTask(
                     it.id,

@@ -1,15 +1,14 @@
 package ai.korio.services.modeler.bpmn
 
-import ai.korio.services.deployment.DeploymentHandler
-import org.camunda.bpm.model.bpmn.BpmnModelInstance
 import org.camunda.bpm.model.bpmn.instance.UserTask
-import org.camunda.bpm.model.bpmn.instance.camunda.CamundaExecutionListener
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaField
 
 
 
 class UserTaskPropertiesHandler {
-
+    /**
+     *
+     * */
     data class UserTaskModel(
             val modelId: String,
             val id: String,
@@ -18,19 +17,19 @@ class UserTaskPropertiesHandler {
             val candidateUsers: MutableList<ElementModel.UserElement>?,
             val candidateGroups: MutableList<ElementModel.UserGroupElement>?,
             val dueDate: ElementModel.DateElement?,
-            val wizardFormKey: ElementChannelModel.WizardFormFlow?,
-            val expertUserFormKey: ElementChannelModel.ExpertUserFormFlow?, // wizard is default, this element aggregates to create longer forms, assuming the same doer
-            val chatFormKey: ElementChannelModel.ChatFormFlow?,
-            val smsFormKey: ElementChannelModel.SMSFormFlow?,
-            val emailFormKey: ElementChannelModel.EmailFormFlow?,
-            val voiceFormKey: ElementChannelModel.VoiceFormFlow? // attempts to transcribe voice calls to form data e.g. using Twilio NLU
-
-
+            val followUpDate: ElementModel.DateElement?,
+            val documentation: ElementModel.StringElement?,
+            // Fields for standard, "wizard" based flow
+            val standardComponentFlow: ElementChannelComponentFlowConfig.WizardTaskComponentFlow?,
+            // Feilds aggregated for a default flow IF the user has permissions on each task
+            val expertUserComponentFlow: ElementChannelComponentFlowConfig.FormTaskComponentFlow?, // wizard is default, this element aggregates to create longer forms, assuming the same doer
+            // Remaining Component Flows are created as templated standard flows OR Camunda SubTasks, per: https://forum.camunda.org/t/creating-sub-tasks-for-a-user-task/137/2
+            val chatComponentFlow: ElementChannelComponentFlowConfig.ChatComponentFlow?,
+            val smsComponentFlow: ElementChannelComponentFlowConfig.SMSComponentFlow?,
+            val emailComponentFlow: ElementChannelComponentFlowConfig.EmailComponentFlow?,
+            val voiceComponentFlow: ElementChannelComponentFlowConfig.VoiceComponentFlow? // attempts to transcribe voice calls to form data e.g. using Twilio NLU
 
     )
-
-
-
 
     /**
      *

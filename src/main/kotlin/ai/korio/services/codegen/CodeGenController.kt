@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 class CodeGenController {
 
-    data class CodeGenInitiator (  // TODO: replace or merge with CodeGenPlanModelInstance data class??
+    data class CodeGenInitiator (  // TODO: replace or merge with CodeGenPlanModel data class??
             val deep: Boolean,
             val codeArtifactType: String,
             val camDefinitionType: String,

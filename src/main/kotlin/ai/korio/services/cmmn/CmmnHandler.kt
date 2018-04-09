@@ -1,7 +1,7 @@
 package ai.korio.services.cmmn
 
 import ai.korio.services.CamundaEngineConfig
-import ai.korio.services.CommandHandler
+import ai.korio.services.commands.CommandHandler
 import ai.korio.services.Models
 import org.camunda.bpm.engine.repository.CaseDefinition
 import org.camunda.bpm.engine.runtime.CaseExecution
@@ -33,7 +33,7 @@ class CmmnHandler() {
         var availableCaseList: MutableList<Models.MyCaseDefinition> = mutableListOf()
         val cases: MutableList<CaseDefinition> = CmmnHandler().availableCaseDefinitions()
         cases.forEach {
-            val caseCommands: MutableList<Models.Command>  = CommandHandler().getCaseCommands(it)
+            val caseCommands: MutableList<CommandHandler.Command>  = CommandHandler().getCaseCommands(it)
             val caseInfo = Models.MyCaseDefinition(
                     it.id,
                     it.key,
@@ -76,7 +76,7 @@ class CmmnHandler() {
                 .list()
         cases.forEach {
             // TODO: somehow get the case key, which, for some reason is not part of the CaseExecution object.
-            val instanceCommands: MutableList<Models.Command> = CommandHandler().getCaseExecutionCommands(it)
+            val instanceCommands: MutableList<CommandHandler.Command> = CommandHandler().getCaseExecutionCommands(it)
             val caseExecution = activeCaseService.createCaseExecutionQuery().caseInstanceId(it.caseInstanceId).list() //need executionId to get vars
             caseExecution.forEach {
                 caseExecutionId = it.id // there can only be one in this list ??
@@ -112,9 +112,9 @@ class CmmnHandler() {
     fun getEnabledHumanTaskExecutions(caseInstanceId: String): MutableList<Models.MyCaseExecution> { //TODO needs to return an array of the
      //   val executions: List<CaseExecution> = getAllEnabledPlanItems(caseInstanceBusinessKey)
         val executions: List<CaseExecution> = getAllEnabledPlanItems(caseInstanceId)
-        var taskCommands: MutableList<Models.Command> = mutableListOf() // FIXME this is temprary mocking
-        taskCommands.add(Models.Command("Mark Done","POST", "humantask-done")) // FIXME
-        taskCommands.add(Models.Command("Assign", "POST","humantask-assign")) // FIXME
+        var taskCommands: MutableList<CommandHandler.Command> = mutableListOf() // FIXME this is temprary mocking
+        taskCommands.add(CommandHandler.Command("Mark Done", "POST", "humantask-done")) // FIXME
+        taskCommands.add(CommandHandler.Command("Assign", "POST", "humantask-assign")) // FIXME
         var enabledHumanTaskExecutions: MutableList<Models.MyCaseExecution> = mutableListOf<Models.MyCaseExecution>()  //needed to initialialize the list...not sure if this works
         executions.forEach{
             if (it.activityType == "humanTask") {  // TODO: make activityType mandatory for MyCaseExecution ??
@@ -146,11 +146,11 @@ class CmmnHandler() {
     fun getEnabledBPMNExecutions(caseInstanceId: String): MutableList<Models.MyCaseExecution> { //TODO needs to return an array of the
         //   val executions: List<CaseExecution> = getAllEnabledPlanItems(caseInstanceBusinessKey)
         val executions: List<CaseExecution> = getAllEnabledPlanItems(caseInstanceId)
-        var taskCommands: MutableList<Models.Command> = mutableListOf() // FIXME this is temprary mocking
-        taskCommands.add(Models.Command("Start", "POST", "bpmn-process-start")) // FIXME: switch to "Work-On"
-        taskCommands.add(Models.Command("Next", "NAVIGATE","bpmn-process-current-task")) // Note: same effect as Start
-        taskCommands.add(Models.Command("Assign", "POST","bpmn-process-assign"))
-        taskCommands.add(Models.Command("More Info", "NAVIGATE","bpmn-process-description"))// FIXME: task vs process
+        var taskCommands: MutableList<CommandHandler.Command> = mutableListOf() // FIXME this is temprary mocking
+        taskCommands.add(CommandHandler.Command("Start", "POST", "bpmn-process-start")) // FIXME: switch to "Work-On"
+        taskCommands.add(CommandHandler.Command("Next", "NAVIGATE", "bpmn-process-current-task")) // Note: same effect as Start
+        taskCommands.add(CommandHandler.Command("Assign", "POST", "bpmn-process-assign"))
+        taskCommands.add(CommandHandler.Command("More Info", "NAVIGATE", "bpmn-process-description"))// FIXME: task vs process
         var enabledBPMNExecutions: MutableList<Models.MyCaseExecution> = mutableListOf<Models.MyCaseExecution>()  //needed to initialialize the list...not sure if this works
         executions.forEach {
             if (it.activityType == "processTask") {  // TODO: make activityType mandatory for MyCaseExecution ??
@@ -185,7 +185,7 @@ class CmmnHandler() {
         val enabledBPMNExecutions: MutableList<Models.MyCaseExecution> = mutableListOf()  //needed to initialialize the list...not sure if this works
         executions.forEach {
             if (it.activityType == "processTask" && it.isActive == true) {  // TODO: make activityType mandatory for MyCaseExecution ??
-                val executionCommands: MutableList<Models.Command> = CommandHandler().getCaseExecutionCommands(it)
+                val executionCommands: MutableList<CommandHandler.Command> = CommandHandler().getCaseExecutionCommands(it)
                 val bpmnTaskInfo = Models.MyCaseExecution( // FIXME: this should be a Task Execution, not a Case Execution
                         it.isActive,
                         it.activityDescription,
@@ -217,7 +217,7 @@ class CmmnHandler() {
         var enabledBPMNExecutions: MutableList<Models.MyCaseExecution> = mutableListOf<Models.MyCaseExecution>()  //needed to initialialize the list...not sure if this works
         executions.forEach {
             if (it.activityType == "processTask" && it.isActive == false) {  // TODO: make activityType mandatory for MyCaseExecution ??
-                val executionCommands: MutableList<Models.Command> = CommandHandler().getCaseExecutionCommands(it)
+                val executionCommands: MutableList<CommandHandler.Command> = CommandHandler().getCaseExecutionCommands(it)
                 val bpmnTaskInfo = Models.MyCaseExecution( // FIXME: this should be a Task Execution, not a Case Execution
                         it.isActive, // NOTE: boolean properties in Kotlin have "is..." added but the model needs to omit "is"!!
                         it.activityDescription,

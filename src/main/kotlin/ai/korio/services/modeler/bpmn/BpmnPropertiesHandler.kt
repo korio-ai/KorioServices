@@ -38,7 +38,7 @@ class BpmnPropertiesHandler {
             val valueNumber: Number?
             )
     /**
-     * On a "click" in the modeler, for each element type, gets the Model Element Attributes of the selected element, including
+     * On a "click" in the modeler, for each element type, gets the Model CamundaElement Attributes of the selected element, including
      * Camunda and Korio extension elements and their attributes
      * */
     fun getAndSetModelElementAttributes(camDefinitionId: String, modelElementId: String, modelElementType: String, modelElementName: String, isDirty: String): BpmnModel {
@@ -78,7 +78,7 @@ class BpmnPropertiesHandler {
     }
 
     /**
-     * If Model Element Instance doesn't yet exist on the backend, create it AND set its TYPE
+     * If Model CamundaElement Instance doesn't yet exist on the backend, create it AND set its TYPE
      * @param modelElementId the selected model element's id
      * @param bpmnModelInstance the instance of the model
      * @param modelElementType from the front-end, whether it is a bpmn:UserTask, etc.,
@@ -96,7 +96,7 @@ class BpmnPropertiesHandler {
 
 
     /**
-     * At model instance creation, creates Korio Extension Model Element Attributes
+     * At model instance creation, creates Korio Extension Model CamundaElement Attributes
      * */
     // FIXME: left this shell, but it isn't called as attributes are added on first click, which could be a dangerous assumption.
     fun setKorioModelElementAttributes(modelInstance: BpmnModelInstance, seedTemplate: BpmnModelHandler.BpmnSeedTemplate)/*: List<ElementAttribute>*/ {
