@@ -16,7 +16,7 @@ class BpmnPropertiesController {
                              @RequestParam(value = "modelElementId") modelElementId: String,
                             @RequestParam(value = "modelElementType") modelElementType: String,
                              @RequestParam(value = "modelElementName") modelElementName: String,
-                             @RequestParam(value = "isDirty") isDirty: String) : BpmnPropertiesHandler.BpmnModel  {
+                             @RequestParam(value = "isDirty") isDirty: String) : BpmnPropertiesHandler.BpmnElementModel  {
         // FIXME: this is just a test.  Should only work for user task right now.
         return BpmnPropertiesHandler().getAndSetModelElementAttributes(camDefinitionId, modelElementId, modelElementType, modelElementName, isDirty )
     }

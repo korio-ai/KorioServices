@@ -31,11 +31,10 @@ class ElementDataFieldModel {
     ): ElementModel.KorioElementWithCodeGen
 
     /**
-     * Set within DataCaptureSubmissionModel, which is set within Channel Component Flow
-     * Too granular for a Service Task
+     * Submission trigger code.
      * This class is used in the MODELER.  For run-time data-transfer, use the scaled-down version of this class
      * */
-    data class SubmissionModel(
+    data class DataCaptureSubmissionTrigger(
             override val korioElementId: String,
             override val name: String,
             override val type: String, // base, extension, korio
@@ -43,8 +42,7 @@ class ElementDataFieldModel {
             override val help: String?,
             override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
             val dataServiceRef: String?,  // FIXME: specified here or in DataCaptureSubmissionModel/PublishSource, or all 3?
-            val masterSubmissionTrigger: DataCaptureSubmissionModel?, // the process and task that owns this field and sets submit timing/rules
-            val dataFields: MutableList<DataField>? // the fields that make up the submission
+            val dataCaptureSubmissionModelRef: String?
     ): ElementModel.KorioElementWithCodeGen
 
     /**
@@ -63,10 +61,11 @@ class ElementDataFieldModel {
             override val help: String?, // instructional text
             val owningDataServiceRef: String?, // each trigger must be owned by its Data Service
             val owningDataSchemaRef: String?, // ID of schema from within Data Service
-            val isMaster: Boolean?, // is this a master trigger, or a SubTask trigger?
-            val masterSubmissionModel: DataCaptureSubmissionModel?, // if NOT a master, who is the master
             val parentTaskId: ProcessAndTaskReference?, // if a SubTask, need a reference to the master.
-            val submission: MutableList<SubmissionModel> // FIXME: list, or just one?
+            val isMaster: Boolean?, // is this a master trigger, or a SubTask trigger?
+            val masterSubmissionModelId: String?, // if NOT a master, korioElementId of the master
+            val submissionTrigger: DataCaptureSubmissionTrigger?, // If IS a master, handles the submission logic
+            val dataFields: MutableList<DataField>? // the fields that make up the submission
     ): ElementModel.KorioElement
 
     /**

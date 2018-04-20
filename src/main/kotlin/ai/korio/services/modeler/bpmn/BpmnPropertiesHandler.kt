@@ -21,7 +21,7 @@ class BpmnPropertiesHandler {
     fun getModelElementAttributeValue(modelElementInstance: ModelElementInstance, attributeName: String): String = modelElementInstance.getAttributeValue(attributeName)
 
 
-    data class BpmnModel(
+    data class BpmnElementModel(
             val modelId: String,
             val elements: MutableList<ElementAttribute>?
     )
@@ -32,16 +32,15 @@ class BpmnPropertiesHandler {
             val category: String, // what tab it should go on
             val help: String?, // instructional text
             val dataType: String, // default to String or string?
-            val defaultValueString: String?, // if the type is a String
-            val defaultValueNumber: Number?, // if the type is a Number
             val valueString: String?, // the actual value
             val valueNumber: Number?
+            //val valueDate: String // FIXME: should be DateTime
             )
     /**
      * On a "click" in the modeler, for each element type, gets the Model CamundaElement Attributes of the selected element, including
      * Camunda and Korio extension elements and their attributes
      * */
-    fun getAndSetModelElementAttributes(camDefinitionId: String, modelElementId: String, modelElementType: String, modelElementName: String, isDirty: String): BpmnModel {
+    fun getAndSetModelElementAttributes(camDefinitionId: String, modelElementId: String, modelElementType: String, modelElementName: String, isDirty: String): BpmnElementModel {
         val bpmnModelInstance = getModelDefinition(camDefinitionId)
         System.out.println("BPMN Model Instance before changes is based on Definition Id of: " + camDefinitionId)
         // While model seems to exist on the front-end, new elements don't exist on the backend. If the element instance doesn't exist, set it
@@ -61,17 +60,17 @@ class BpmnPropertiesHandler {
                 val process = modelElementInstance as Process
                 process.elementType.attributes.map {
                     System.out.println("process attribute: " + it.attributeName)
-                    elementAttributes.add(ElementAttribute(it.attributeName, "base", "all", "help text here", "string", "", 0, "", 0)) }
+                    elementAttributes.add(ElementAttribute(it.attributeName, "base", "all", "help text here", "string", "", 0)) }
                 System.out.println("Is this process executable? " + process.isExecutable)
                 }
             else -> {
                 System.out.println("this element type is not yet registered")
-                elementAttributes.add(ElementAttribute("not a registered element", "string", "base", "not a registered element", "string","not a registered element", 0, "not a registered element", 0))
+                elementAttributes.add(ElementAttribute("not a registered element", "string", "base", "not a registered element", "string", "not a registered element", 0))
                 }
         }
         // need to deploy this updated process for it to be available to the front-end
         val newCamDefinitionId: String = DeploymentHandler().processDeploymentOnElementUpdate(camDefinitionId, bpmnModelInstance)
-        val bpmnModel = BpmnModel(newCamDefinitionId,elementAttributes)
+        val bpmnModel = BpmnElementModel(newCamDefinitionId,elementAttributes)
         // TODO: need this to RETURN both the newCamDefinitionId AND, I guess??, the elementAttributes
         //return elementAttributes
         return bpmnModel
