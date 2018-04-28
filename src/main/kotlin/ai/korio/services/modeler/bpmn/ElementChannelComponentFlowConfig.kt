@@ -1,6 +1,6 @@
 package ai.korio.services.modeler.bpmn
 
-import ai.korio.services.codegen.CodeGenPlan
+import ai.korio.services.codegen.CodeGenPlanConfig
 
 /**
  * Handles Multi Channel component/field flow adaptations around a master task concept.  Core flow is authored for Wizard-like execution
@@ -45,7 +45,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val parentTaskId: String?,
             val formOrder: Number, // Defaults to 1. Sets the order of this component if multiple UserTasks are active
             val formKey: String?, // korio extended
@@ -62,7 +62,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val formKey: String?, // basic Camunda formKey
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,
             val dataPublishFieldSet: ElementDataFieldModel.DataPublishFieldSet?,
@@ -80,7 +80,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val parentTaskId: String?,
             val formKey: String?, // korio extended
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,
@@ -97,7 +97,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val parentTaskId: String?,
             val formKey: String?, // korio extended
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,
@@ -114,7 +114,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val parentTaskId: String?,
             val formKey: String?, // korio extended
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,
@@ -131,7 +131,7 @@ class ElementChannelComponentFlowConfig {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val parentTaskId: String?,
             val formKey: String?, // korio extended
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,

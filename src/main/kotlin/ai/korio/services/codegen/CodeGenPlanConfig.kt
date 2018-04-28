@@ -10,12 +10,13 @@ import ai.korio.services.modeler.bpmn.ElementModel
  * Stores the code gen plan for each Service
  * Ensures that all code has been generated across all components
  *
- * TYPES of CodeGenPlan:
+ * TYPES of CodeGenPlanConfig:
  *  FRONTEND:
  *      FrontEnd Seed: Seed projects include a config file that getFrontEndCodeGenPlansFromSeed will call to understand available Plans
  *      Styles: [Case, Process, Task] for specifying CSS
+ *      Barrel Files: [Platform, Case, Process, Task] holds all include/import references. See: https://medium.com/@adrianfaciu/barrel-files-to-use-or-not-to-use-75521cd18e65
  *      UserTask Data Capture Form: [Case, Process, Task, Submission/Channel/Field] form field layout + submit code (via state manager), (one per channel??), INCLUDES contextual data field publish
- *      Field-level Validation: [Field] NOTE: probably should NOT use CodeGenPlan!!
+ *      Field-level Validation: [Field] NOTE: probably should NOT use CodeGenPlanConfig!!
  *      Field and Form-level Analytics: [Platform, Case, Process, Task, Submission/Channel/Field]
  *      Case State Management: [Case, Process] manage variable scope for overall Case/Service
  *      Process State Management: [Process] manage variable scope for Process
@@ -46,31 +47,17 @@ import ai.korio.services.modeler.bpmn.ElementModel
  *          Domain Event & Command Replay: [Platform, Case, Data Service] While Event replay is default to avoid side-effects, Command replay is an option, modeled on an
  *              element by element basis to allow side-effects, IF desired.
  *          Materialized View: [Platform, Case, Data Service] Query-side of CQRS/ES
+ *      AI & MACHINE LEARNING
+ *          AI/Machine Learning Processor: Listens on data stream
+ *          AI/Machine Learning Model Deployer: Deploys and redeploys models to CMMN sentries, BPMN gateways, etc..
  *      ServiceTask 3rd Party REST calls:
  *
  * */
-class CodeGenPlan {
+class CodeGenPlanConfig {
 
     /**
-     * The base interface for the code itself.
-     * */
-    interface CamundaElementSourceCode: ElementModel.KorioElement {
-        override val korioElementId: String
-        override val name: String
-        override val type: String // base, extension, korio
-        override val category: String // what tab it should go on
-        override val help: String? // instructional text
-        val useGenericHandler: Boolean // if a generic handler exists, use it
-        val genericHandler: CodeGenArtifacts // the generic handler
-        val handlerType: String // Simple CamundaElementSourceCode, Function As Service
-        val handlerLanguage: String
-        val uriConfig: String // access to service, if not inline
-        val code: String
-        val memberOfFile: CodeGenFileComponents
-    }
-    /**
      * Set at Platform deployments and used by each element type
-     * For the Platform, sets the types of CodeGenPlan for each element type for the current deployment.
+     * For the Platform, sets the types of CodeGenPlanConfig for each element type for the current deployment.
      * @param elementType Case, Process, Task, etc..
      * @param codeGenPlanModelsToConfigure the list of plans for the element type for this deployment. Set in the database.
      * */
@@ -79,7 +66,7 @@ class CodeGenPlan {
             val codeGenPlanModelsToConfigure: MutableList<CodeGenPlanModel>
     )
     /**
-     * Stores the code gen plan model for an CamundaElement. See Types of CodeGenPlan. Each element type needs multiple
+     * Stores the code gen plan model for an CamundaElement. See Types of CodeGenPlanConfig. Each element type needs multiple
      * codeGenPlans.
      * @param elementTypeLevel includes: Platform, Case, Process, Task, Data Service, Channel/Field
      * @param useUniversal if true, this scope should defer to the universal for this type and level
@@ -115,8 +102,8 @@ class CodeGenPlan {
             override val help: String?, // instructional text,
             val deep: Boolean, // If false, suppresses overwriting code gen and offers shallow code snippets for use in custom code
             val dirty: Boolean,
-            val activeCodeGenTemplate: CodeGenTemplate,
-            val activeCode: CodeComponent
+            val activeCodeGenTemplate: CodeGenTemplate
+           // val activeCode: CodeComponent // REMOVED as this class is just for config, not holding generated code
     ): ElementModel.KorioElement
     /**
      * The actual Freemarker template that handles code generation for the element in question
@@ -130,7 +117,8 @@ class CodeGenPlan {
             val uri: String
     ) : ElementModel.KorioElement
     /**
-     * Defines the code file that will be generated from one or more code components
+     * Defines the code file that will be generated from one or more code components. May be different from CodeGenTemplate
+     * as the code files may be concatenated from multiple templates (TODO:...or not??)
      * */
     data class CodeGenFileComponents(
             override val korioElementId: String,
@@ -138,26 +126,10 @@ class CodeGenPlan {
             override val type: String, // base, extension, korio
             override val category: String, // what tab it should go on
             override val help: String?, // instructional text,
-            val fileName: String,
-            val codeComponents: MutableList<CodeComponent>?
+            val fileName: String
+          //  val codeComponents: MutableList<CodeComponent>? // REMOVED as this class is just for config, not holding generated code
     ) : ElementModel.KorioElement
-    /**
-     * The source code saved at the component level... aggregated to the file level by CodeGenFileComponents
-     * */
-    data class CodeComponent(
-            override val korioElementId: String,
-            override val name: String,
-            override val type: String, // base, extension, korio
-            override val category: String, // what tab it should go on
-            override val help: String?, // instructional text
-            override val useGenericHandler: Boolean, // if a generic handler exists, use it
-            override val genericHandler: CodeGenArtifacts, // the generic handler
-            override val handlerType: String, // Simple CamundaElementSourceCode, Function As Service
-            override val handlerLanguage: String,
-            override val uriConfig: String, // access to service, if not inline
-            override val code: String,
-            override val memberOfFile: CodeGenFileComponents
-    ): CamundaElementSourceCode
+
     /**
      * Gets the code gen plan from all the available seed projects
      * @param gitSeedProjectURIs the list of available seeds, each of which have a code gen plan template in the repo.

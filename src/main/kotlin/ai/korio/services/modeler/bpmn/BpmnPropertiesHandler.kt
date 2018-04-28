@@ -26,7 +26,7 @@ class BpmnPropertiesHandler {
             val elements: MutableList<ElementAttribute>?
     )
 
-    data class ElementAttribute(
+    data class ElementAttribute( // FIXME: retire this in favour of ElementModelConfig AND ElementModelValue
             val name: String,
             val type: String, // base, extension, korio
             val category: String, // what tab it should go on
@@ -34,12 +34,13 @@ class BpmnPropertiesHandler {
             val dataType: String, // default to String or string?
             val valueString: String?, // the actual value
             val valueNumber: Number?
-            //val valueDate: String // FIXME: should be DateTime
+
             )
     /**
      * On a "click" in the modeler, for each element type, gets the Model CamundaElement Attributes of the selected element, including
      * Camunda and Korio extension elements and their attributes
      * */
+    // FIXME: refactor this in favour of ElementModelConfig AND ElementModelValue
     fun getAndSetModelElementAttributes(camDefinitionId: String, modelElementId: String, modelElementType: String, modelElementName: String, isDirty: String): BpmnElementModel {
         val bpmnModelInstance = getModelDefinition(camDefinitionId)
         System.out.println("BPMN Model Instance before changes is based on Definition Id of: " + camDefinitionId)

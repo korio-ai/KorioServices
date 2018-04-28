@@ -1,16 +1,16 @@
 package ai.korio.services.modeler.bpmn
 
-import ai.korio.services.codegen.CodeGenPlan
+import ai.korio.services.codegen.CodeGenPlanConfig
 import org.camunda.bpm.model.bpmn.instance.UserTask
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaField
 
 
-
 class UserTaskPropertiesHandler {
+
     /**
      *
      * */
-    data class UserTaskModel(
+/*    data class Model(
             override val definitionId: String,
             override val elementId: String,
             override val name: String,
@@ -24,17 +24,68 @@ class UserTaskPropertiesHandler {
             val followUpDate: ElementModel.DateElement?,
             val documentation: ElementModel.StringElement?,
             val formKey: String?, // korio extended
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val codeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val dataCaptureSubmission: ElementDataFieldModel.DataCaptureSubmissionModel?,
             val dataPublishFieldSet: ElementDataFieldModel.DataPublishFieldSet?,
             val commands: ai.korio.services.commands.CommandHandler.Command // ideally exposed as HATEOS resources
 
-            ): ElementModel.CamundaElementWithCodeGen
+            ): ElementModel.CamundaElementWithCodeGen*/
+
+
+
+    init {
+        // FIXME: find a way to instantiate the modelElementConfig
+    }
+    /**
+     * gets the model configuration from the database to create a UserTask Model Element
+     * @param modelElementConfig a data structure that configures the UserTask Model Element
+     * */
+    fun instantiateUserTaskModelElementConfig(modelElementConfig: String): ElementModel.ModelElementConfig {
+        // FIXME: TODO: feed from a modelElementConfig file or database
+        val userTaskChildElementConfigs: MutableList<ElementModel.ModelElementConfig> = mutableListOf()
+        val childelement1: ElementModel.ModelElementConfig = ElementModel.ModelElementConfig(
+                "parent definition Id",
+                "task child 1 element Id",
+                "task child 1 element name",
+                "task child 1 element type",
+                "task child 1 element category",
+                "task child 1 element help",
+                null,
+                null
+        )
+        val childelement2: ElementModel.ModelElementConfig = ElementModel.ModelElementConfig(
+                "parent definition Id",
+                "task child 2 element Id",
+                "task child 2 element name",
+                "task child 2 element type",
+                "task child 2 element category",
+                "task child 2 element help",
+                null,
+                null
+        )
+        userTaskChildElementConfigs.add(childelement1)
+        userTaskChildElementConfigs.add(childelement2)
+        val userTaskCodeGenPlans: MutableList<CodeGenPlanConfig.CodeGenPlanModel> = mutableListOf()
+        val userTaskModelElement = ElementModel.ModelElementConfig(
+                "parent definition Id",
+                "task element Id",
+                "task name",
+                "task type",
+                "task category",
+                "task help",
+                userTaskCodeGenPlans,
+                userTaskChildElementConfigs
+        )
+        return userTaskModelElement
+    }
 
     /**
      *
      * */
     fun getAndSetUserTaskElementsAndAttributes(userTask: UserTask, modelElementName: String, isDirty: String): MutableList<BpmnPropertiesHandler.ElementAttribute> {
+        val userTaskModelElementConfigConfig: ElementModel.ModelElementConfig = instantiateUserTaskModelElementConfig("test")
+        // TODO: use above variable to step through element config, rather than below
+        // FIXME: elementConfig SHOULD NOT be set inside this function.  Try class init, autowired or similar
         val attributes: MutableList<BpmnPropertiesHandler.ElementAttribute> = mutableListOf()
         if (userTask.extensionElements == null) { // if the extension elements aren't set up yet for UserTask model class, do so
                 setKorioTaskElementAttributes(userTask) // add the extension elements

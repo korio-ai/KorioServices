@@ -1,6 +1,6 @@
 package ai.korio.services.modeler.bpmn
 
-import ai.korio.services.codegen.CodeGenPlan
+import ai.korio.services.codegen.CodeGenPlanConfig
 import org.camunda.bpm.model.bpmn.instance.ServiceTask
 import org.joda.time.DateTime
 
@@ -22,7 +22,7 @@ class ElementDataFieldModel {
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val dataType: String?,
             val stringValue: String?,
             val numberValue: Number?,
@@ -34,13 +34,14 @@ class ElementDataFieldModel {
      * Submission trigger code.
      * This class is used in the MODELER.  For run-time data-transfer, use the scaled-down version of this class
      * */
+    // FIXME: seems unnecessary.  factored out.
     data class DataCaptureSubmissionTrigger(
             override val korioElementId: String,
             override val name: String,
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val dataServiceRef: String?,  // FIXME: specified here or in DataCaptureSubmissionModel/PublishSource, or all 3?
             val dataCaptureSubmissionModelRef: String?
     ): ElementModel.KorioElementWithCodeGen
@@ -64,9 +65,10 @@ class ElementDataFieldModel {
             val parentTaskId: ProcessAndTaskReference?, // if a SubTask, need a reference to the master.
             val isMaster: Boolean?, // is this a master trigger, or a SubTask trigger?
             val masterSubmissionModelId: String?, // if NOT a master, korioElementId of the master
-            val submissionTrigger: DataCaptureSubmissionTrigger?, // If IS a master, handles the submission logic
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>, // for fields
+            val submissionTriggerCode: CodeGenPlanConfig.CodeGenPlanModel?, // If IS a master, handles the submission logic
             val dataFields: MutableList<DataField>? // the fields that make up the submission
-    ): ElementModel.KorioElement
+    ): ElementModel.KorioElementWithCodeGen
 
     /**
      * In the context of a User Task, published fields provide context to support data capture.  Rich publishing of content,
@@ -81,7 +83,7 @@ class ElementDataFieldModel {
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val dataFields: MutableList<DataField>?
     ): ElementModel.KorioElementWithCodeGen
     /**
@@ -94,7 +96,7 @@ class ElementDataFieldModel {
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val owningDataServiceRef: String?, // ID of data service
             val streamListenerServiceTasks: MutableList<ServiceTask>? // Service Tasks that listen on the stream for relevant data
     ): ElementModel.KorioElementWithCodeGen
@@ -109,7 +111,7 @@ class ElementDataFieldModel {
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val owningDataServiceRef: String?, // ID of data service
             val materializedViewRef: String?, // ID of materialized view from within data service
             val parentTaskId: ProcessAndTaskReference?, // if a SubTask, need a reference to the master.
@@ -122,7 +124,7 @@ class ElementDataFieldModel {
             override val type: String, // base, extension, korio
             override val category: String,
             override val help: String?,
-            override val configuredCodeGenPlanModels: MutableList<CodeGenPlan.CodeGenPlanModel>,
+            override val configuredCodeGenPlanModels: MutableList<CodeGenPlanConfig.CodeGenPlanModel>,
             val owningDataServiceRef: String?, // ID of data service
             val isAggregateRoot: Boolean, // Is this the Aggregate root of the data service?
             val aggregateMemberChildrenRefs: MutableList<String?>, // if is Aggregate Root, what are the child scheams, if any
