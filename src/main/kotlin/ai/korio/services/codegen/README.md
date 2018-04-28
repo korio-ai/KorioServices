@@ -51,7 +51,7 @@ Since , any language or framework code can be generated.
 - AI/Machine Learning Model Deployer: Deploys and redeploys models to CMMN sentries, BPMN gateways, etc..
        
 ##### ServiceTask 3rd Party REST calls Code Generation Configurators:
-- Communications and Messaging: [Platform, Case, Process, Service Task]
+- Communications and Messaging: [Platform, Case, Process, Service Task] Integrations with Twilio, Plivo, etc.
 - Financials: [Platform, Case, Process, Service Task]
-- Marketing Automation: [Platform, Case, Process, Service Task]
+- Marketing Automation: [Platform, Case, Process, Service Task] Integrations with Marketo, HubSpot, etc.
  
