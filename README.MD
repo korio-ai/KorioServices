@@ -5,7 +5,7 @@ Camunda already has a REST interface.  I think this is the best approach given t
 non-Camunda services.
 
 ## Model-Driven with an Escape Hatch
-As a principle, all model-driven aspects of the platform should be "detachable" or "ejectable" from the modeling approach.  In this scenario, the ejected service is is still part of the underlying horizontal framework, but it is detached from the code-genenration capabilities of the modeler.
+As a principle, all model-driven aspects of the platform should be "detachable" or "ejectable" from the modeling approach.  In this scenario, the ejected service is is still part of the underlying horizontal framework, but it is detached from the code-genenration capabilities of the modeler.  Even when "deep" code generation is suppressed, the Korio IDE can still offer code snippets for use in these code files.
 
 ## High Level Architecture
 
