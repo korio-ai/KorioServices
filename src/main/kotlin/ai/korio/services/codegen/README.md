@@ -14,7 +14,8 @@ Since , any language or framework code can be generated.
 #### Platform-Level Code Generation Configurators
 - Infrastructure As Code: Provisions services, etc.
 - Frontend & Backend Seed Project Selection: Sets the seed projects that generated code will be pushed/pulled into. NOTE: Seeds themselves may not work with certain Code Generation Plans.  Seed configurations must include a list of supported Code Generation Plans.
-   
+- Repo & CI/CD Pipelines: Sets up the repo (GitHub, GitLab, TeamServices) and deployment and CI/CD strategies.
+
 #### Frontend Code Generation Configurators
 - Styles: [Case, Process, Task] for specifying CSS
 - Barrel Files: [Platform, Case, Process] holds all include/import references. See: https://medium.com/@adrianfaciu/barrel-files-to-use-or-not-to-use-75521cd18e65
