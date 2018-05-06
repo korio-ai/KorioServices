@@ -11,7 +11,7 @@ Since , any language or framework code can be generated.
 
 ### Types of CodeGenPlanConfig
    
-#### Platform-Level Code Generation Configurators
+#### Platform-Level Code Generation Configurators (Korio Stack)
 - Infrastructure As Code: Provisions services, etc.
 - Frontend & Backend Seed Project Selection: Sets the seed projects that generated code will be pushed/pulled into. NOTE: Seeds themselves may not work with certain Code Generation Plans.  Seed configurations must include a list of supported Code Generation Plans.
 - Repo & CI/CD Pipelines: Sets up the repo (GitHub, GitLab, TeamServices) and deployment and CI/CD strategies.
@@ -21,6 +21,7 @@ Since , any language or framework code can be generated.
 - Barrel Files: [Platform, Case, Process] holds all include/import references. See: https://medium.com/@adrianfaciu/barrel-files-to-use-or-not-to-use-75521cd18e65
 - UserTask Data Capture Form: [Case, Process, Task, Submission/Channel/Field] form field layout + submit code (via state manager), (one per channel??), INCLUDES contextual data field publish
 - Field-level Validation: [Field] NOTE: probably should NOT use CodeGenPlanConfig!!
+- Internationalization: Multilingual.
 - Field and Form-level Analytics: [Platform, Case, Process, Task, Submission/Channel/Field]
 - Case State Management: [Case, Process] manage variable scope for overall Case/Service
 - Process State Management: [Process] manage variable scope for Process
@@ -43,7 +44,7 @@ Since , any language or framework code can be generated.
 - Governed Schema: [Platform, Case, Data Service] schema format to use, defaults to Avro
 - Channel Submissions & Data Capture Coverage: [Case, Data Service, Submission/Channel/Field]holds inbound data until submission is ready, given multi-channel data capture and "self-healing" AI, seeks or reports on required/desired data.  Handles mis-ordered or duplicate submissions.
 - Reactive Stream Publish/Subscribe: [Platform, Case, Data Service, Submission/Channel/Field]defines reactive framework (RxJava, Reactor, Akka), and pub/sub with Camunda, Domain Events, Data Flow Event Listeners
-- Domain Event Persistence: [Platform, Case, Data Service]stores domain events
+- Domain Event Persistence: [Platform, Case, Data Service]stores domain events on the Korio Stack (and to the service's own data store??)
 - Domain Event & Command Replay: [Platform, Case, Data Service] While Event replay is default to avoid side-effects, Command replay is an option, modeled on an element by element basis to allow side-effects, IF desired.
 - Materialized View: [Platform, Case, Data Service] Query-side of CQRS/ES
 

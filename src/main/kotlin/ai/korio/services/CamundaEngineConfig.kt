@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service
 import kotlin.reflect.KProperty
 
 @Service
-class CamundaEngineConfig {  // TODO: Consider invoking these in the handler's constructor... though maybe no benefit.
+class CamundaEngineConfig { // TODO: Consider invoking these in the handler's constructor... though maybe no benefit.
+
     /**
      * ?? Allows a application level version of the process engine to be called??
      * */
