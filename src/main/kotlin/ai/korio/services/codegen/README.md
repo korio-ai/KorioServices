@@ -32,6 +32,7 @@ Since , any language or framework code can be generated.
 
 #### Backend Code Generation Configurators
 - API: [Case, Process, Task, Submission/Channel/Field] generates an API, e.g. GraphQL, REST, gRPC, Ws, SSE.  Assume  GraphQL for field-level api
+- Sagas & Compensating Transactions: [Case to Case] For complex, long-running inter-service orchestration, modeled with BPMN outside the case (consider Zeebe). Start around 13 minutes of this video or, more precisely, 34 minutes https://www.infoq.com/presentations/saga-microservices
 - Generic Command Handler: [Case, Process, User Task, Submission/Channel/Field] A handler that generically passes data capture payload as a single Domain Event
 - Custom Command Handler (side-effect): [System Task] creates one or more Domain Events for a SINGLE SIDE-EFFECT, code shell that allows data to be transformed or specially handled outside the edges of the Data Service. NOTE: that this should be largely MODELED and ensure the creation of a PURE FUNCTION with a single side-effect or a properly "contained" side-effect as per functional language practices.
 - Custom Process Event Listener Handler: [Throw and Catch Events] ???
@@ -53,7 +54,7 @@ Since , any language or framework code can be generated.
 - AI/Machine Learning Model Deployer: Deploys and redeploys models to CMMN sentries, BPMN gateways, etc..
        
 ##### ServiceTask 3rd Party REST calls Code Generation Configurators:
-- Communications and Messaging: [Platform, Case, Process, Service Task] Integrations with Twilio, Plivo, etc.
+- Communications and User Messaging: [Platform, Case, Process, Service Task] Integrations with Twilio, Plivo, etc.
 - Financials: [Platform, Case, Process, Service Task]
 - Marketing Automation: [Platform, Case, Process, Service Task] Integrations with Marketo, HubSpot, etc.
  

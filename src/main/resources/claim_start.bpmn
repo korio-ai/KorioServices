@@ -55,14 +55,36 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_15mkg2y</bpmn:incoming>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_0misudk" name="Auto">
+    <bpmn:userTask id="Task_0misudk" name="Auto" camunda:assignee="bob" camunda:candidateUsers="bill, bob" camunda:candidateGroups="Claims_Team" camunda:dueDate="2018-06-26T09:54:00">
+      <bpmn:documentation>This is task documentation</bpmn:documentation>
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="vehicle_VIN" label="Vehicle VIN Number:" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0nya7h8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11qultq</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_11qultq" sourceRef="Task_0misudk" targetRef="Task_0txfxb7" />
+    <bpmn:serviceTask id="Task_0txfxb7" name="Service Task Example" camunda:asyncBefore="true" camunda:expression="${expression_goes_here}" camunda:resultVariable="steves_result_variable">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${steves_listener_expression}" event="start">
+          <camunda:field name="steves_injected_field">
+            <camunda:string>steve_value</camunda:string>
+          </camunda:field>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="steves_input_parameter">steves_input_value</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:field name="steves_field_injection">
+          <camunda:string>steves_field_injection_value</camunda:string>
+        </camunda:field>
+        <camunda:properties>
+          <camunda:property name="steves_made_up_extension" value="value of steves made up extension" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_11qultq</bpmn:incoming>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Claim_Start">
@@ -123,6 +145,16 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_0bdorcr_di" bpmnElement="Task_0misudk">
         <dc:Bounds x="768" y="192" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11qultq_di" bpmnElement="SequenceFlow_11qultq">
+        <di:waypoint xsi:type="dc:Point" x="868" y="232" />
+        <di:waypoint xsi:type="dc:Point" x="962" y="232" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="915" y="210.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0y5rnem_di" bpmnElement="Task_0txfxb7">
+        <dc:Bounds x="962" y="192" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
